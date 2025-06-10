@@ -52,17 +52,18 @@ def find_latest_period(max_months_back=12, start_date=None):
     Returns a tuple (periodo, data_list).
     """
     start_date = start_date or datetime.now()
-    # Allow override of tipoEntidad via environment variable (comma-separated)
-    tipo_list = None
+    # Determine tipoEntidad filter: override via SB_TIPO_ENTIDADES or auto-discover
     env_tipos = os.getenv("SB_TIPO_ENTIDADES")
     if env_tipos:
         tipo_list = [t.strip() for t in env_tipos.split(",") if t.strip()]
+    else:
+        # Auto-discover all tipoEntidad values for the starting period
+        periodo0 = start_date.strftime("%Y-%m")
+        tipo_list = get_tipo_entidades_for_period(periodo0)
+
     for i in range(max_months_back):
         periodo = (start_date - relativedelta(months=i)).strftime("%Y-%m")
-        if tipo_list:
-            data = get_eif_for_period(periodo, tipo_entidades=tipo_list)
-        else:
-            data = get_eif_for_period(periodo)
+        data = get_eif_for_period(periodo, tipo_entidades=tipo_list)
         if data:
             return periodo, data
     raise SBAPIError(f"No data found in the last {max_months_back} months")
@@ -97,6 +98,32 @@ def get_entities_for_period(periodo, registros=1000):
     data = resp.json()
     entities = sorted({item.get("entidad") for item in data if "entidad" in item})
     return entities
+
+def get_tipo_entidades_for_period(periodo, registros=1000):
+    """
+    Fetch distinct tipoEntidad values for a given YYYY-MM period.
+
+    Returns a sorted list of unique tipoEntidad strings or raises SBAPIError.
+    """
+    key = os.getenv("SB_API_KEY")
+    if not key:
+        raise SBAPIError("SB_API_KEY environment variable is not set")
+    url = f"{BASE_URL}/detalle-entidades/acceso"
+    headers = {
+        "Ocp-Apim-Subscription-Key": key,
+        "User-Agent": "Mozilla/5.0"
+    }
+    params = {
+        "periodoInicial": periodo,
+        "periodoFinal": periodo,
+        "registros": registros,
+    }
+    resp = requests.get(url, headers=headers, params=params)
+    if resp.status_code != 200:
+        raise SBAPIError(f"Error fetching tipoEntidad list: {resp.status_code} {resp.text}")
+    data = resp.json()
+    tipos = sorted({item.get("tipoEntidad") for item in data if item.get("tipoEntidad")})
+    return tipos
 
 
 def find_latest_period_for_all_entities(max_months_back=12, start_date=None):

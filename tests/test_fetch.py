@@ -17,7 +17,10 @@ class DummyResponse:
 
 @pytest.fixture(autouse=True)
 def env_api_key(monkeypatch):
+    # Ensure API key is set, and clear any entity/type filters from environment for test isolation
     monkeypatch.setenv("SB_API_KEY", "dummy_key")
+    monkeypatch.delenv("SB_TIPO_ENTIDADES", raising=False)
+    monkeypatch.delenv("SB_ENTIDADES", raising=False)
 
 
 def test_get_eif_for_period_success(monkeypatch):
@@ -47,7 +50,9 @@ def test_get_eif_for_period_http_error(monkeypatch):
 
 def test_find_latest_period(monkeypatch):
     calls = []
-    def fake_get_eif(periodo, registros=1000):
+    # Stub type discovery to trigger fallback to get_eif_for_period()
+    monkeypatch.setattr(fetch_module, "get_tipo_entidades_for_period", lambda periodo, registros=1000: [])
+    def fake_get_eif(periodo, registros=1000, tipo_entidades=None):
         calls.append(periodo)
         return [] if periodo == "2021-06" else [{"a": 1}]
 
@@ -72,6 +77,20 @@ def test_get_entities_for_period_success(monkeypatch):
     entities = fetch_module.get_entities_for_period("2021-01")
     assert entities == ["A", "B"]
 
+def test_get_tipo_entidades_for_period_success(monkeypatch):
+    records = [
+        {"tipoEntidad": "X", "detalle": "foo"},
+        {"tipoEntidad": "Y", "detalle": "bar"},
+        {"tipoEntidad": "X", "detalle": "baz"},
+    ]
+
+    def fake_get(url, headers, params):
+        return DummyResponse(records)
+
+    monkeypatch.setattr(fetch_module.requests, "get", fake_get)
+    tipos = fetch_module.get_tipo_entidades_for_period("2021-01")
+    assert tipos == ["X", "Y"]
+
 def test_get_entities_for_period_http_error(monkeypatch):
     def fake_get(url, headers, params):
         return DummyResponse({"error": "fail"}, status_code=500)
@@ -80,6 +99,14 @@ def test_get_entities_for_period_http_error(monkeypatch):
     monkeypatch.setattr(fetch_module.requests, "get", fake_get)
     with pytest.raises(fetch_module.SBAPIError):
         fetch_module.get_entities_for_period("2021-01")
+
+def test_get_tipo_entidades_for_period_http_error(monkeypatch):
+    def fake_get(url, headers, params):
+        return DummyResponse({"error": "fail"}, status_code=500)
+
+    monkeypatch.setattr(fetch_module.requests, "get", fake_get)
+    with pytest.raises(fetch_module.SBAPIError):
+        fetch_module.get_tipo_entidades_for_period("2021-01")
 
 def test_find_latest_period_for_all_entities(monkeypatch):
     # Simulate entities and eif data: only period "2021-05" has full coverage

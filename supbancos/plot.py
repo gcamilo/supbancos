@@ -29,12 +29,14 @@ def plot_bar_chart(aggregated, title="Activos"):
 
     Returns (fig, ax).
     """
-    labels = list(aggregated.keys())
-    values = [aggregated[k] for k in labels]
+    # Filter out the 'TODOS' category if present
+    filtered = {k: v for k, v in aggregated.items() if k.upper() != "TODOS"}
+    labels = list(filtered.keys())
+    values = [filtered[k] for k in labels]
     fig, ax = plt.subplots()
-    ax.bar(labels, values)
+    ax.bar(range(len(labels)), values, tick_label=labels)
     ax.set_title(title)
     ax.set_ylabel("Valor")
-    ax.set_xticklabels(labels, rotation=45, ha="right")
+    plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
     return fig, ax
