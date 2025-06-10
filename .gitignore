@@ -6,3 +6,5 @@ __pycache__/
 
 # Pytest cache
 .pytest_cache/
+# Generated asset charts
+assets_*.png
