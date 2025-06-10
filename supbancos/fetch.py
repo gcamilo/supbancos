@@ -25,7 +25,10 @@ def get_eif_for_period(periodo, registros=1000):
     if not key:
         raise SBAPIError("SB_API_KEY environment variable is not set")
     url = f"{BASE_URL}/estados/situacion/eif"
-    headers = {"Ocp-Apim-Subscription-Key": key}
+    headers = {
+        "Ocp-Apim-Subscription-Key": key,
+        "User-Agent": "Mozilla/5.0"
+    }
     params = {
         "periodoInicial": periodo,
         "periodoFinal": periodo,
