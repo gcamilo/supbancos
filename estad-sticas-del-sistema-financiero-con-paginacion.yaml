@@ -1,0 +1,3502 @@
+openapi: 3.0.1
+info:
+  title: Estadísticas del Sistema Financiero v2
+  description: Consulta los datos de las estadísticas del Sistema Financiero de la República Dominicana. Para utilizar el API debes registrarte y elegir uno de nuestros Planes para generar el API Key correspondiente.
+  contact:
+    email: soporteapis@sb.gob.do
+  version: '1.0'
+servers:
+  - url: https://apis.sb.gob.do/estadisticas/v2
+paths:
+  /captaciones/detalle:
+    get:
+      tags:
+        - Captaciones
+      summary: Detalle de captaciones
+      description: 'Variables e indicadores que suministran información del total de captaciones por sector, tipo de depositantes, género, localidades, instrumento medio de captación, divisas, componente y tasas promedio ponderadas.'
+      operationId: detalleCaptaciones
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: persona
+          in: query
+          description: 'Usar nombres largos de las personas. Ejemplo: [ Persona Juridica, Persona Fisica ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: instrumento
+          in: query
+          description: 'Usar nombres largos de los instrumetos. Ejemplo: [ LETRAS , CUENTAS BÁSICAS DE NÓMINA ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: divisa
+          in: query
+          description: 'Usar nombres cortos de las divisas. Ejemplo: [ EUR , DOP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetallesCaptaciones'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                region: string
+                provincia: string
+                persona: string
+                genero: string
+                tipoCliente: string
+                instrumentoCaptacion: string
+                moneda: string
+                divisa: string
+                partidaNivel1: string
+                partidaNivel2: string
+                publicoPrivadoNivel1: string
+                publicoPrivadoNivel2: string
+                financieroNoFinanciero: string
+                residenteNoResidente: string
+                componente: string
+                instrumentoMedio: string
+                contraParte: string
+                situacionNivel1: string
+                situacionNivel2: string
+                cantidadInstrumento: 0
+                balance: 0
+                tasaPrimedioPonderadoPorBalance: 0
+                tasaPrimedioPonderado: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /captaciones/sector-depositante:
+    get:
+      tags:
+        - Captaciones
+      summary: Captaciones por sector y tipo depositante
+      description: 'Variables e indicadores que suministran información del total de captaciones por sector, tipo de depositantes, género, localidades, instrumento medio de captación, divisas, componente y tasas promedio ponderadas.'
+      operationId: captacionesSectorTipoDepositante
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptacionesSectorTipoDepositante'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                residenteNoResidente: string
+                publicoPrivado: string
+                financieroNoFinanciero: string
+                cantidadInstrumento: 0
+                balance: 0
+                tasaPrimedioPonderadoPorBalance: 0
+                tasaPrimedioPonderado: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /captaciones/moneda:
+    get:
+      tags:
+        - Captaciones
+      summary: Captaciones por moneda
+      description: 'Variables e indicadores que suministran información del total de captaciones por sector, tipo de depositantes, género, localidades instrumento medio de captación, divisas, componente y tasas promedio ponderadas.'
+      operationId: captacionesMoneda
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptacionesMoneda'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                partidaNivel2: string
+                divisa: string
+                instrumentoCaptacion: string
+                cantidadInstrumento: 0
+                balance: 0
+                tasaPrimedioPonderadoPorBalance: 0
+                tasaPrimedioPonderado: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /captaciones/localidad:
+    get:
+      tags:
+        - Captaciones
+      summary: Captaciones por localidad
+      description: 'Variables e indicadores que suministran información del total de captaciones por sector, tipo de depositantes, género, localidades, instrumento medio de captación, divisas, componente y tasas promedio ponderadas.'
+      operationId: captacionesLocalidad
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptacionesLocalidad'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                region: string
+                provincia: string
+                codIso: string
+                persona: string
+                divisa: string
+                cantidadInstrumento: 0
+                balance: 0
+                tasaPromedioPonderadoPorBalance: 0
+                tasaPromedioPonderado: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /carteras/creditos:
+    get:
+      tags:
+        - Carteras
+      summary: Cartera de crédito total
+      description: 'Variables e indicadores que proveen información de la cartera de crédito total por sectores económicos, clasificación de riesgos, tipo de préstamos y facilidad, créditos al sector público.'
+      operationId: carteraCreditoTotal
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarteraCreditoTotal'
+              example:
+                periodo: string
+                tipoCredito: string
+                tipoEntidad: string
+                entidad: string
+                sectorEconomico: string
+                region: string
+                provincia: string
+                moneda: string
+                tipoCartera: string
+                actividad: string
+                sector: string
+                persona: string
+                facilidad: string
+                residencia: string
+                administracionYPropiedad: string
+                genero: string
+                tipoCliente: string
+                clasificacionEntidad: string
+                cantidadPlasticos: 0
+                cantidadCredito: 0
+                deuda: 0
+                tasaPorDeuda: 0
+                deudaCapital: 0
+                deudaVencida: 0
+                deudaVencidaDe31A90Dias: 0
+                valorDesembolso: 0
+                valorGarantia: 0
+                valorProvisionCapitalYRendimiento: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /carteras/creditos/sectores-economicos:
+    get:
+      tags:
+        - Carteras
+      summary: Cartera de créditos por sectores económicos
+      description: 'Variables e indicadores que suministran informaciones sobre la cantidad de créditos en el sistema, monto de la deuda, tasa promedio ponderada de los créditos, deuda capital, deuda vencida, monto desembolsado, garantía admisible y sectores económicos.'
+      operationId: carteraCreditosSectoresEconomicos
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarteraCreditosSectoresEconomicos'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                sectorEconomico: string
+                cantidadCredito: 0
+                deuda: 0
+                tasaPorDeuda: 0
+                tasaPromedioPonderado: 0
+                deudaCapital: 0
+                deudaVencida: 0
+                deudaVencidaDe31A90Dias: 0
+                valorDesembolso: 0
+                valorGarantia: 0
+                valorProvisionCapitalYRendimiento: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /carteras/creditos/clasificacion-riesgo:
+    get:
+      tags:
+        - Carteras
+      summary: Cartera de créditos por clasificación de riesgo
+      description: 'Variables e indicadores que suministran informaciones sobre la cantidad de créditos en el sistema, monto de la deuda, tasa promedio ponderada de los créditos, deuda capital, deuda vencida, monto desembolsado, garantía admisible y sectores económicos.'
+      operationId: carteraCreditosClasificacionRiesgo
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarteraCreditosClasificacionRiesgo'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                clasificacionRiesgo: string
+                tipoCartera: string
+                cantidadPlastico: 0
+                cantidadCredito: 0
+                deuda: 0
+                tasaPorDeuda: 0
+                tasaPromedioPonderado: 0
+                deudaCapital: 0
+                deudaVencida: 0
+                deudaVencidaDe31A90Dias: 0
+                valorDesembolso: 0
+                valorGarantia: 0
+                valorProvisionCapitalYRendimiento: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /carteras/creditos/facilidad:
+    get:
+      tags:
+        - Carteras
+      summary: Cartera de créditos por tipo de facilidad
+      description: 'Variables e indicadores que suministran informaciones sobre las distintas facilidades de crédito que otorgan las EIF, cantidad de plásticos, cantidad de créditos, deuda, tasa de interés promedio ponderada, deuda capital, deuda vencida, tasa por deuda, monto desembolsado, provisión requerida de capital y rendimientos y garantía admisible.'
+      operationId: carteraCreditosTipoFacilidad
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarteraCreditosTipoFacilidad'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                facilidad: string
+                cantidadPlastico: 0
+                cantidadCredito: 0
+                deuda: 0
+                tasaPorDeuda: 0
+                tasaPromedioPonderado: 0
+                deudaCapital: 0
+                deudaVencida: 0
+                deudaVencidaDe31A90Dias: 0
+                valorDesembolso: 0
+                valorGarantia: 0
+                valorProvisionCapitalYRendimiento: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /carteras/creditos/tipo:
+    get:
+      tags:
+        - Carteras
+      summary: Cartera de créditos por tipo
+      description: 'Variables e indicadores que suministran informaciones sobre la cantidad de créditos en el sistema, monto de la deuda, tasa promedio ponderada de los créditos, deuda capital, deuda vencida, monto desembolsado, garantía admisible, sectores económicos y género.'
+      operationId: carteraCreditosTipo
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarteraCreditosTipo'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                tipoCartera: string
+                cantidadCredito: 0
+                deuda: 0
+                tasaPorDeuda: 0
+                tasaPromedioPonderado: 0
+                deudaCapital: 0
+                deudaVencida: 0
+                deudaVencidaDe31A90Dias: 0
+                valorDesembolso: 0
+                valorGarantia: 0
+                valorProvisionCapitalYRendimiento: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /carteras/creditos/genero:
+    get:
+      tags:
+        - Carteras
+      summary: Cartera de créditos por genero
+      description: 'Variables e indicadores que suministran informaciones sobre la cantidad de créditos en el sistema, monto de la deuda, tasa promedio ponderada de los créditos, deuda capital, deuda vencida, monto desembolsado, garantía admisible, sectores económicos y género.'
+      operationId: carteraCreditosGenero
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarteraCreditosGenero'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                genero: string
+                cantidadCredito: 0
+                deuda: 0
+                tasaPorDeuda: 0
+                tasaPromedioPonderado: 0
+                deudaCapital: 0
+                deudaVencida: 0
+                deudaVencidaDe31A90Dias: 0
+                valorDesembolso: 0
+                valorGarantia: 0
+                valorProvisionCapitalYRendimiento: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /carteras/creditos/moneda:
+    get:
+      tags:
+        - Carteras
+      summary: Cartera de créditos por moneda
+      description: 'Variables e indicadores que suministran informaciones sobre la cantidad de créditos en el sistema, monto de la deuda, tasa promedio ponderada de los créditos, deuda capital, deuda vencida, monto desembolsado, garantía admisible, sectores económicos y género.'
+      operationId: carteraCreditosMoneda
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarteraCreditosMoneda'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                tipoMoneda: string
+                tipoCartera: string
+                cantidadCredito: 0
+                deuda: 0
+                tasaPorDeuda: 0
+                tasaPromedioPonderado: 0
+                deudaCapital: 0
+                deudaVencida: 0
+                deudaVencidaDe31A90Dias: 0
+                valorDesembolso: 0
+                valorGarantia: 0
+                valorProvisionCapitalYRendimiento: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /carteras/creditos/localidad:
+    get:
+      tags:
+        - Carteras
+      summary: Cartera de créditos por localidad
+      description: 'Variables e indicadores que suministran informaciones sobre la cantidad de créditos en el sistema, monto de la deuda, tasa promedio ponderada de los créditos, deuda capital, deuda vencida, monto desembolsado, garantía admisible, sectores económicos y género.'
+      operationId: carteraCreditosLocalidad
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarteraCreditosLocalidad'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                region: string
+                provincia: string
+                codIso: string
+                tipoCartera: string
+                deuda: 0
+                tasaPorDeuda: 0
+                cantidadCredito: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /carteras/creditos/inversiones:
+    get:
+      tags:
+        - Carteras
+      summary: Cartera de inversiones
+      description: 'Variables e indicadores que proveen informaciones de las inversiones por sector, tipo de moneda, emisor y tipo de instrumentos.'
+      operationId: carteraInversiones
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ BNV , CARIBE ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: moneda
+          in: query
+          description: 'Usar nombres largos de Monedas. Ejemplo: [ MONEDA NACIONAL , MONEDA EXTRANJERA ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: componente
+          in: query
+          description: 'Usar nombres largos de Componentes. Ejemplo: [ CAPITAL , RENDIMIENTOS ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarteraInversiones'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                clasificacionCuentas: string
+                partidaNivel1: string
+                partidaNivel2: string
+                moneda: string
+                publicoPrivadoNivel1: string
+                publicoPrivadoNivel2: string
+                financieroNoFinanciero: string
+                residenteNoResidente: string
+                componente: string
+                instrumentoMedio: string
+                contraparte: string
+                situacionNivel1: string
+                situacionNivel2: string
+                valor: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /detalle-entidades/acceso:
+    get:
+      tags:
+        - DetalleEntidades
+      summary: Cifras de acceso
+      description: 'Variables e indicadores que suministran información detallada de la composición del Sistema Financiero en cuanto a la cantidad de entidades, según al tipo de entidad a la que pertenece.'
+      operationId: cifrasAcceso
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , EMPIRE ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: detalle
+          in: query
+          description: 'Usar nombres completos de los detalles. Ejemplo: [ EMPLEADO , OFICINA ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetallesEntidades'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                detalle: string
+                cantidad: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /estados/situacion/eif:
+    get:
+      tags:
+        - EstadosFinancieros
+      summary: Estado de situación de Entidades de Intermediación Financiera (EIF)
+      description: 'Variables e indicadores que suministran información detallada y estructurada de la situación financiera (activos, pasivos, patrimonio, disponibilidades, etc.) de las Entidades de Intermediación Financiera (EIF).'
+      operationId: estadoSituacionEIF
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstadoSituacion'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                conceptoNivel1: string
+                conceptoNivel2: string
+                conceptoNivel3: string
+                valor: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /estados/resultados/eif:
+    get:
+      tags:
+        - EstadosFinancieros
+      summary: Estado de resultados de Entidades de Intermediación Financiera (EIF)
+      description: 'Variables e indicadores que suministran información detallada y estructurada de la situación financiera (activos, pasivos, patrimonio, resultado operacional, margen de intermediación, disponibilidades, etc.) de las Entidades de Intermediación Financiera (EIF).'
+      operationId: estadoResultadosEIF
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstadoResultados'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                conceptoNivel1: string
+                conceptoNivel2: string
+                conceptoNivel3: string
+                conceptoNivel4: string
+                conceptoNivel5: string
+                conceptoNivel6: string
+                conceptoNivel7: string
+                valor: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /estados/situacion/eic:
+    get:
+      tags:
+        - EstadosFinancieros
+      summary: Estado de situación de Entidades de Intermediación Cambiaria (EIC)
+      description: 'Variables e indicadores que suministran información detallada y estructurada de la situación financiera (activos, pasivos, patrimonio, disponibilidades, etc.) de las Entidades de Intermediación Cambiaria (EIC).'
+      operationId: estadoSituacionEIC
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ SCT , AGC AMERICA ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ ARC , AC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstadoSituacion'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                conceptoNivel1: string
+                conceptoNivel2: string
+                conceptoNivel3: string
+                valor: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /estados/resultados/eic:
+    get:
+      tags:
+        - EstadosFinancieros
+      summary: Estado de resultados de Entidades de Intermediación Cambiaria (EIC)
+      description: 'Variables e indicadores que suministran información detallada y estructurada de la situación financiera (activos, pasivos, patrimonio, resultado operacional, margen de intermediación, disponibilidades, etc.) de las Entidades de Intermediación Cambiaria (EIC).'
+      operationId: estadoResultadosEIC
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ SCT , AGC AMERICA ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ ARC , AC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstadoResultados'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                conceptoNivel1: string
+                conceptoNivel2: string
+                conceptoNivel3: string
+                conceptoNivel4: string
+                conceptoNivel5: string
+                conceptoNivel6: string
+                conceptoNivel7: string
+                valor: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /indicadores/financieros:
+    get:
+      tags:
+        - Indicadores
+      summary: Indicadores financieros
+      description: 'Variables e indicadores que proveen informaciones de la rentabilidad sobre el patrimonio, ingresos financieros sobre activos productivos, margen financiero sobre margen operacional bruto, activos productivos sobre activos totales y margen financiero bruto sobre activos totales brutos.'
+      operationId: indicadoresFinancieros
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ APAP , BHD LEON ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , CC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: indicador
+          in: query
+          description: 'Usar nombres largos de los indicadores. Ejemplo: [ Total de Pasivos , Total Patrimonio Neto ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoIndicador
+          in: query
+          description: 'Usar nombres largos de los tipos de indicadores. Ejemplo: [ Volumen , Rentabilidad ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndicadoresFinancieros'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                indicador: string
+                tipoIndicador: string
+                valor: 0
+                unidad: string
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /indicadores/principales:
+    get:
+      tags:
+        - Indicadores
+      summary: Principales indicadores del sistema
+      description: 'Variables e indicadores que suministran informaciones sobre la rentabilidad de los activos, solvencia y morosidad.'
+      operationId: principalesIndicadoresSistema
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrincipalesIndicadoresSistema'
+              example:
+                periodo: string
+                activos: 0
+                solvencia: 0
+                montoCarteraCredito: 0
+                morosidad: 0
+                roa: 0
+                tasaActiva: 0
+                tasaPasiva: 0
+                margen: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /indicadores/riesgo-credito:
+    get:
+      tags:
+        - Indicadores
+      summary: Indicadores de riesgo de crédito
+      description: 'Variables e indicadores que proveen informaciones del estado en que se encuentra la cartera de crédito de las EIF, tales como morosidad de la cartera.'
+      operationId: indicadoresRiesgoCredito
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , BNV ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , CC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoCartera
+          in: query
+          description: 'Usar nombres largos de los tipos de carteras. Ejemplo: [ Tarjetas de créditos , Créditos comerciales ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndicadoresRiesgoCredito'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                tipoCartera: string
+                sector: string
+                deudaVencida: 0
+                deudaVencidaDe31A90Dias: 0
+                deuda: 0
+                provisionesRequerida: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /indicadores/morosidad-estresada:
+    get:
+      tags:
+        - Indicadores
+      summary: Indicador de morosidad estresada
+      description: 'Variables e indicadores que proveen información de los créditos que se encuentran vencidos, en cobranza judicial, reestructurado REA, reestructurado temporal, castigados a 12 meses y adjudicado 12 meses.'
+      operationId: indicadorMorosidadEstresada
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , BNV ]'
+          schema:
+            type: array
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , CC ]'
+          schema:
+            type: array
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MorosidadEstresada'
+              example:
+                periodo: string
+                vencido: 0
+                cobranza: 0
+                tc31a60: 0
+                reestructuradoRea: 0
+                reestructuradoTemporal: 0
+                castigos: 0
+                adjudicado: 0
+                carteraTotal: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /reclamaciones/eif:
+    get:
+      tags:
+        - Reclamaciones
+      summary: Reclamaciones de Entidades de Intermediación Financiera (EIF)
+      description: Variables e indicadores que suministran informaciones de reclamos a productos y servicios recibidos por las Entidades de Intermediación Financiera (EIF).
+      operationId: reclamacionesEIF
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , EMPIRE ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReclamacionesEIF'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                productoServicio: string
+                resultadoReclamacion: string
+                cantidad: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /reclamaciones/prousuario:
+    get:
+      tags:
+        - Reclamaciones
+      summary: Reclamaciones de ProUsuario
+      description: Variables e indicadores que suministran informaciones de reclamos a productos y servicios recibidos por la Oficina de Servicios y Protección al Usuario (ProUsuario).
+      operationId: reclamacionesProUsuario
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReclamacionesProUsuario'
+              example:
+                periodo: string
+                tipoEntidad: string
+                tipoPersona: string
+                producto: string
+                valor: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /solvencia/componentes:
+    get:
+      tags:
+        - SolvenciaComponentes
+      summary: Solvencia
+      description: 'Variables e indicadores que proveen informaciones referentes al capital primario y secundario, patrimonio técnico ajustado, capital requerido por riesgo de mercado, activos y contingentes ponderado por riesgo de mercado y riesgo de liquidez (ACPR).'
+      operationId: solvencia
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ BHD LEON , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Solvencia'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                componente: string
+                valor: 0
+                unidad: string
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /subagentes/operaciones:
+    get:
+      tags:
+        - SubagentesBancarios
+      summary: Operaciones de Subagentes bancarios
+      description: 'Variables e indicadores que suministran información de la cantidad de subagentes bancarios a nivel nacional, monto transado, volumen (cantidad de transacciones), actividad económica y tipo de transacción.'
+      operationId: operacionesSubagentesBancarios
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , EMPIRE ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: region
+          in: query
+          description: 'Usar nombres completos de las regiones. Ejemplo: [ NORTE , ESTE ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: provincia
+          in: query
+          description: 'Usar nombres completos de las provincias. Ejemplo: [ AZUA , SANTIAGO ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperacionesSubagentesBancarios'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                region: string
+                provincia: string
+                actividadEconomica: string
+                tipoTransaccion: string
+                productoServicio: string
+                cantidadTransacciones: 0
+                valorTransado: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /subagentes/actividad-economica:
+    get:
+      tags:
+        - SubagentesBancarios
+      summary: Sucursales de Subagentes bancarios por localidad y actividad económica
+      description: Variables e indicadores que suministran información de la cantidad de sucursales de subagentes bancarios a nivel nacional (región y provincia) y actividad económica.
+      operationId: sucursalesSubagentesBancariosLocalidadActividad
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , EMPIRE ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: region
+          in: query
+          description: 'Usar nombres completos de las regiones. Ejemplo: [ NORTE , ESTE ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: provincia
+          in: query
+          description: 'Usar nombres completos de las provincias. Ejemplo: [ AZUA , SANTIAGO ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SucursalesSubagentesBancariosLocalidadActividad'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                region: string
+                provincia: string
+                actividadEconomica: string
+                cantidadSucursales: 0
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /tasas-comisiones/tarjetas-credito:
+    get:
+      tags:
+        - TasasComisiones
+      summary: Tasas y comisiones de Tarjetas de crédito
+      description: 'Variables e indicadores que suministran informaciones de los distintos tipos de tarjetas de créditos, marca, denominación de la moneda, marca, formato de tarifa, montos mínimos y máximos, tasas y comisiones.'
+      operationId: TasasComisionesTarjetasCredito
+      parameters:
+        - name: periodoInicial
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          required: true
+          schema:
+            type: string
+            default: '2021-01'
+            example: '2021-01'
+        - name: periodoFinal
+          in: query
+          description: 'Formato de fecha YYYY-MM. Ejemplo: 2021-01'
+          schema:
+            type: string
+            nullable: true
+            example: '2021-01'
+        - name: entidad
+          in: query
+          description: 'Usar nombres cortos de entidades. Ejemplo: [ ADEMI , APAP ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: tipoEntidad
+          in: query
+          description: 'Usar nombres cortos de los tipos de entidades. Ejemplo: [ BM , BAyC ]'
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: paginas
+          in: query
+          description: Format - int32. Indica el número de páginas a retonar
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+        - name: registros
+          in: query
+          description: Format - int32. Indica el número de registros a retornar
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            example: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TasasComisionesTC'
+              example:
+                periodo: string
+                tipoEntidad: string
+                entidad: string
+                nombreProducto: string
+                marca: string
+                tipoTarjeta: string
+                moneda: string
+                concepto: string
+                periodicidad: string
+                formatoTarifa: string
+                valor: 0
+                valorMinimo: 0
+                valorMaximo: 0
+                unidadValor: string
+        '204':
+          description: Success
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+components:
+  schemas:
+    DetallesCaptaciones:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        region:
+          type: string
+          nullable: true
+        provincia:
+          type: string
+          nullable: true
+        persona:
+          type: string
+          nullable: true
+        genero:
+          type: string
+          nullable: true
+        tipoCliente:
+          type: string
+          nullable: true
+        instrumentoCaptacion:
+          type: string
+          nullable: true
+        moneda:
+          type: string
+          nullable: true
+        divisa:
+          type: string
+          nullable: true
+        partidaNivel1:
+          type: string
+          nullable: true
+        partidaNivel2:
+          type: string
+          nullable: true
+        publicoPrivadoNivel1:
+          type: string
+          nullable: true
+        publicoPrivadoNivel2:
+          type: string
+          nullable: true
+        financieroNoFinanciero:
+          type: string
+          nullable: true
+        residenteNoResidente:
+          type: string
+          nullable: true
+        componente:
+          type: string
+          nullable: true
+        instrumentoMedio:
+          type: string
+          nullable: true
+        contraParte:
+          type: string
+          nullable: true
+        situacionNivel1:
+          type: string
+          nullable: true
+        situacionNivel2:
+          type: string
+          nullable: true
+        cantidadInstrumento:
+          type: integer
+          format: int32
+        balance:
+          type: number
+          format: double
+          nullable: true
+        tasaPrimedioPonderadoPorBalance:
+          type: number
+          format: double
+          nullable: true
+        tasaPrimedioPonderado:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    CaptacionesSectorTipoDepositante:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        residenteNoResidente:
+          type: string
+          nullable: true
+        publicoPrivado:
+          type: string
+          nullable: true
+        financieroNoFinanciero:
+          type: string
+          nullable: true
+        cantidadInstrumento:
+          type: integer
+          format: int32
+        balance:
+          type: number
+          format: double
+          nullable: true
+        tasaPrimedioPonderadoPorBalance:
+          type: number
+          format: double
+          nullable: true
+        tasaPrimedioPonderado:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    CaptacionesMoneda:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        partidaNivel2:
+          type: string
+          nullable: true
+        divisa:
+          type: string
+          nullable: true
+        instrumentoCaptacion:
+          type: string
+          nullable: true
+        cantidadInstrumento:
+          type: integer
+          format: int32
+        balance:
+          type: number
+          format: double
+          nullable: true
+        tasaPrimedioPonderadoPorBalance:
+          type: number
+          format: double
+          nullable: true
+        tasaPrimedioPonderado:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    CaptacionesLocalidad:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        region:
+          type: string
+          nullable: true
+        provincia:
+          type: string
+          nullable: true
+        codIso:
+          type: string
+          nullable: true
+        persona:
+          type: string
+          nullable: true
+        divisa:
+          type: string
+          nullable: true
+        cantidadInstrumento:
+          type: integer
+          format: int32
+        balance:
+          type: number
+          format: double
+          nullable: true
+        tasaPromedioPonderadoPorBalance:
+          type: number
+          format: double
+          nullable: true
+        tasaPromedioPonderado:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    CarteraCreditoTotal:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoCredito:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        sectorEconomico:
+          type: string
+          nullable: true
+        region:
+          type: string
+          nullable: true
+        provincia:
+          type: string
+          nullable: true
+        moneda:
+          type: string
+          nullable: true
+        tipoCartera:
+          type: string
+          nullable: true
+        actividad:
+          type: string
+          nullable: true
+        sector:
+          type: string
+          nullable: true
+        persona:
+          type: string
+          nullable: true
+        facilidad:
+          type: string
+          nullable: true
+        residencia:
+          type: string
+          nullable: true
+        administracionYPropiedad:
+          type: string
+          nullable: true
+        genero:
+          type: string
+          nullable: true
+        tipoCliente:
+          type: string
+          nullable: true
+        clasificacionEntidad:
+          type: string
+          nullable: true
+        cantidadPlasticos:
+          type: integer
+          format: int32
+        cantidadCredito:
+          type: integer
+          format: int32
+        deuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPorDeuda:
+          type: number
+          format: double
+          nullable: true
+        deudaCapital:
+          type: number
+          format: double
+          nullable: true
+        deudaVencida:
+          type: number
+          format: double
+          nullable: true
+        deudaVencidaDe31A90Dias:
+          type: number
+          format: double
+          nullable: true
+        valorDesembolso:
+          type: number
+          format: double
+          nullable: true
+        valorGarantia:
+          type: number
+          format: double
+          nullable: true
+        valorProvisionCapitalYRendimiento:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    CarteraCreditosSectoresEconomicos:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        sectorEconomico:
+          type: string
+          nullable: true
+        cantidadCredito:
+          type: integer
+          format: int32
+        deuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPorDeuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPromedioPonderado:
+          type: number
+          format: double
+          nullable: true
+        deudaCapital:
+          type: number
+          format: double
+          nullable: true
+        deudaVencida:
+          type: number
+          format: double
+          nullable: true
+        deudaVencidaDe31A90Dias:
+          type: number
+          format: double
+          nullable: true
+        valorDesembolso:
+          type: number
+          format: double
+          nullable: true
+        valorGarantia:
+          type: number
+          format: double
+          nullable: true
+        valorProvisionCapitalYRendimiento:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    CarteraCreditosClasificacionRiesgo:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        clasificacionRiesgo:
+          type: string
+          nullable: true
+        tipoCartera:
+          type: string
+          nullable: true
+        cantidadPlastico:
+          type: integer
+          format: int32
+        cantidadCredito:
+          type: integer
+          format: int32
+        deuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPorDeuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPromedioPonderado:
+          type: number
+          format: double
+          nullable: true
+        deudaCapital:
+          type: number
+          format: double
+          nullable: true
+        deudaVencida:
+          type: number
+          format: double
+          nullable: true
+        deudaVencidaDe31A90Dias:
+          type: number
+          format: double
+          nullable: true
+        valorDesembolso:
+          type: number
+          format: double
+          nullable: true
+        valorGarantia:
+          type: number
+          format: double
+          nullable: true
+        valorProvisionCapitalYRendimiento:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    CarteraCreditosTipoFacilidad:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        facilidad:
+          type: string
+          nullable: true
+        cantidadPlastico:
+          type: integer
+          format: int32
+        cantidadCredito:
+          type: integer
+          format: int32
+        deuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPorDeuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPromedioPonderado:
+          type: number
+          format: double
+          nullable: true
+        deudaCapital:
+          type: number
+          format: double
+          nullable: true
+        deudaVencida:
+          type: number
+          format: double
+          nullable: true
+        deudaVencidaDe31A90Dias:
+          type: number
+          format: double
+          nullable: true
+        valorDesembolso:
+          type: number
+          format: double
+          nullable: true
+        valorGarantia:
+          type: number
+          format: double
+          nullable: true
+        valorProvisionCapitalYRendimiento:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    CarteraCreditosTipo:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        tipoCartera:
+          type: string
+          nullable: true
+        cantidadCredito:
+          type: integer
+          format: int32
+        deuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPorDeuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPromedioPonderado:
+          type: number
+          format: double
+          nullable: true
+        deudaCapital:
+          type: number
+          format: double
+          nullable: true
+        deudaVencida:
+          type: number
+          format: double
+          nullable: true
+        deudaVencidaDe31A90Dias:
+          type: number
+          format: double
+          nullable: true
+        valorDesembolso:
+          type: number
+          format: double
+          nullable: true
+        valorGarantia:
+          type: number
+          format: double
+          nullable: true
+        valorProvisionCapitalYRendimiento:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    CarteraCreditosGenero:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        genero:
+          type: string
+          nullable: true
+        cantidadCredito:
+          type: integer
+          format: int32
+        deuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPorDeuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPromedioPonderado:
+          type: number
+          format: double
+          nullable: true
+        deudaCapital:
+          type: number
+          format: double
+          nullable: true
+        deudaVencida:
+          type: number
+          format: double
+          nullable: true
+        deudaVencidaDe31A90Dias:
+          type: number
+          format: double
+          nullable: true
+        valorDesembolso:
+          type: number
+          format: double
+          nullable: true
+        valorGarantia:
+          type: number
+          format: double
+          nullable: true
+        valorProvisionCapitalYRendimiento:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    CarteraCreditosMoneda:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        tipoMoneda:
+          type: string
+          nullable: true
+        tipoCartera:
+          type: string
+          nullable: true
+        cantidadCredito:
+          type: integer
+          format: int32
+        deuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPorDeuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPromedioPonderado:
+          type: number
+          format: double
+          nullable: true
+        deudaCapital:
+          type: number
+          format: double
+          nullable: true
+        deudaVencida:
+          type: number
+          format: double
+          nullable: true
+        deudaVencidaDe31A90Dias:
+          type: number
+          format: double
+          nullable: true
+        valorDesembolso:
+          type: number
+          format: double
+          nullable: true
+        valorGarantia:
+          type: number
+          format: double
+          nullable: true
+        valorProvisionCapitalYRendimiento:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    CarteraCreditosLocalidad:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        region:
+          type: string
+          nullable: true
+        provincia:
+          type: string
+          nullable: true
+        codIso:
+          type: string
+          nullable: true
+        tipoCartera:
+          type: string
+          nullable: true
+        deuda:
+          type: number
+          format: double
+          nullable: true
+        tasaPorDeuda:
+          type: number
+          format: double
+          nullable: true
+        cantidadCredito:
+          type: integer
+          format: int32
+      additionalProperties: false
+    CarteraInversiones:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        clasificacionCuentas:
+          type: string
+          nullable: true
+        partidaNivel1:
+          type: string
+          nullable: true
+        partidaNivel2:
+          type: string
+          nullable: true
+        moneda:
+          type: string
+          nullable: true
+        publicoPrivadoNivel1:
+          type: string
+          nullable: true
+        publicoPrivadoNivel2:
+          type: string
+          nullable: true
+        financieroNoFinanciero:
+          type: string
+          nullable: true
+        residenteNoResidente:
+          type: string
+          nullable: true
+        componente:
+          type: string
+          nullable: true
+        instrumentoMedio:
+          type: string
+          nullable: true
+        contraparte:
+          type: string
+          nullable: true
+        situacionNivel1:
+          type: string
+          nullable: true
+        situacionNivel2:
+          type: string
+          nullable: true
+        valor:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    DetallesEntidades:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        detalle:
+          type: string
+          nullable: true
+        cantidad:
+          type: integer
+          format: int32
+      additionalProperties: false
+    EstadoSituacion:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        conceptoNivel1:
+          type: string
+          nullable: true
+        conceptoNivel2:
+          type: string
+          nullable: true
+        conceptoNivel3:
+          type: string
+          nullable: true
+        valor:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    EstadoResultados:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        conceptoNivel1:
+          type: string
+          nullable: true
+        conceptoNivel2:
+          type: string
+          nullable: true
+        conceptoNivel3:
+          type: string
+          nullable: true
+        conceptoNivel4:
+          type: string
+          nullable: true
+        conceptoNivel5:
+          type: string
+          nullable: true
+        conceptoNivel6:
+          type: string
+          nullable: true
+        conceptoNivel7:
+          type: string
+          nullable: true
+        valor:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    IndicadoresFinancieros:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        indicador:
+          type: string
+          nullable: true
+        tipoIndicador:
+          type: string
+          nullable: true
+        valor:
+          type: number
+          format: double
+          nullable: true
+        unidad:
+          type: string
+          nullable: true
+      additionalProperties: false
+    PrincipalesIndicadoresSistema:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        activos:
+          type: number
+          format: double
+          nullable: true
+        solvencia:
+          type: number
+          format: double
+          nullable: true
+        montoCarteraCredito:
+          type: number
+          format: double
+          nullable: true
+        morosidad:
+          type: number
+          format: double
+          nullable: true
+        roa:
+          type: number
+          format: double
+          nullable: true
+        tasaActiva:
+          type: number
+          format: double
+          nullable: true
+        tasaPasiva:
+          type: number
+          format: double
+          nullable: true
+        margen:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    IndicadoresRiesgoCredito:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        tipoCartera:
+          type: string
+          nullable: true
+        sector:
+          type: string
+          nullable: true
+        deudaVencida:
+          type: number
+          format: double
+          nullable: true
+        deudaVencidaDe31A90Dias:
+          type: number
+          format: double
+          nullable: true
+        deuda:
+          type: number
+          format: double
+          nullable: true
+        provisionesRequerida:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    MorosidadEstresada:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        vencido:
+          type: number
+          format: double
+          nullable: true
+        cobranza:
+          type: number
+          format: double
+          nullable: true
+        tc31a60:
+          type: number
+          format: double
+          nullable: true
+        reestructuradoRea:
+          type: number
+          format: double
+          nullable: true
+        reestructuradoTemporal:
+          type: number
+          format: double
+          nullable: true
+        castigos:
+          type: number
+          format: double
+          nullable: true
+        adjudicado:
+          type: number
+          format: double
+          nullable: true
+        carteraTotal:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    ReclamacionesEIF:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        productoServicio:
+          type: string
+          nullable: true
+        resultadoReclamacion:
+          type: string
+          nullable: true
+        cantidad:
+          type: integer
+          format: int32
+      additionalProperties: false
+    ReclamacionesProUsuario:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        tipoPersona:
+          type: string
+          nullable: true
+        producto:
+          type: string
+          nullable: true
+        valor:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    Solvencia:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        componente:
+          type: string
+          nullable: true
+        valor:
+          type: number
+          format: double
+          nullable: true
+        unidad:
+          type: string
+          nullable: true
+      additionalProperties: false
+    OperacionesSubagentesBancarios:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        region:
+          type: string
+          nullable: true
+        provincia:
+          type: string
+          nullable: true
+        actividadEconomica:
+          type: string
+          nullable: true
+        tipoTransaccion:
+          type: string
+          nullable: true
+        productoServicio:
+          type: string
+          nullable: true
+        cantidadTransacciones:
+          type: number
+          format: double
+          nullable: true
+        valorTransado:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    SucursalesSubagentesBancariosLocalidadActividad:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        region:
+          type: string
+          nullable: true
+        provincia:
+          type: string
+          nullable: true
+        actividadEconomica:
+          type: string
+          nullable: true
+        cantidadSucursales:
+          type: integer
+          format: int32
+      additionalProperties: false
+    TasasComisionesTC:
+      type: object
+      properties:
+        periodo:
+          type: string
+          nullable: true
+        tipoEntidad:
+          type: string
+          nullable: true
+        entidad:
+          type: string
+          nullable: true
+        nombreProducto:
+          type: string
+          nullable: true
+        marca:
+          type: string
+          nullable: true
+        tipoTarjeta:
+          type: string
+          nullable: true
+        moneda:
+          type: string
+          nullable: true
+        concepto:
+          type: string
+          nullable: true
+        periodicidad:
+          type: string
+          nullable: true
+        formatoTarifa:
+          type: string
+          nullable: true
+        valor:
+          type: number
+          format: double
+          nullable: true
+        valorMinimo:
+          type: number
+          format: double
+          nullable: true
+        valorMaximo:
+          type: number
+          format: double
+          nullable: true
+        unidadValor:
+          type: string
+          nullable: true
+      additionalProperties: false
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+security:
+  - apiKeyHeader: [ ]
+  - apiKeyQuery: [ ]
+tags:
+  - name: Captaciones
+    description: Captaciones
+  - name: DetalleEntidades
+    description: Detalle de entidades
+  - name: EstadosFinancieros
+    description: Estados Financieros
+  - name: Indicadores
+    description: Indicadores
+  - name: Reclamaciones
+    description: Reclamaciones
+  - name: SolvenciaComponentes
+    description: Solvencia y sus componentes
+  - name: SubagentesBancarios
+    description: Subagentes Bancarios
+  - name: TasasComisiones
+    description: Tasas y Comisiones
+  - name: Carteras
+    description: Carteras
