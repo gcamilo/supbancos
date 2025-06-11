@@ -3,11 +3,13 @@ from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 import requests
+import xml.etree.ElementTree as ET
 from dotenv import load_dotenv
 
 load_dotenv()
 
 BASE_URL = "https://apis.sb.gob.do/estadisticas/v2"
+RATE_XML_URL = "https://cdn.bancentral.gov.do/documents/nsdp/documents/INR_DR.xml"
 
 
 class SBAPIError(Exception):
@@ -143,3 +145,54 @@ def find_latest_period_for_all_entities(max_months_back=12, start_date=None):
         if set(entities) <= reported:
             return periodo, entities, data
     raise SBAPIError(f"No common data found in the last {max_months_back} months")
+
+
+def get_principales(periodo_inicial, periodo_final=None, registros=100):
+    """
+    Fetch principal system indicators (incl. tasaActiva, tasaPasiva) for a range of periods.
+
+    Returns a list of records (one per periodo) or raises SBAPIError on failure.
+    """
+    key = os.getenv("SB_API_KEY")
+    if not key:
+        raise SBAPIError("SB_API_KEY environment variable is not set")
+    url = f"{BASE_URL}/indicadores/principales"
+    headers = {"Ocp-Apim-Subscription-Key": key, "User-Agent": "Mozilla/5.0"}
+    params = {"periodoInicial": periodo_inicial, "registros": registros}
+    if periodo_final:
+        params["periodoFinal"] = periodo_final
+    resp = requests.get(url, headers=headers, params=params)
+    if resp.status_code != 200:
+        raise SBAPIError(f"Error fetching principal indicators: {resp.status_code} {resp.text}")
+    return resp.json()
+
+
+def get_rate_series_xml(indicator: str) -> dict[str, float]:
+    """
+    Fetch and parse the INR_DR.xml from the Central Bank,
+    extracting the time series for the given INDICATOR code.
+    Returns a dict mapping YYYY-MM to rate values (floats).
+    """
+    resp = requests.get(RATE_XML_URL)
+    if resp.status_code != 200:
+        raise SBAPIError(f"Error fetching rate XML: {resp.status_code}")
+    try:
+        root = ET.fromstring(resp.content)
+    except ET.ParseError as e:
+        raise SBAPIError(f"Error parsing rate XML: {e}")
+    series_elem = None
+    for elem in root.findall(".//{*}Series"):
+        if elem.attrib.get("INDICATOR") == indicator:
+            series_elem = elem
+            break
+    if series_elem is None:
+        raise SBAPIError(f"No series found for indicator {indicator}")
+    rates = {}
+    for obs in series_elem.findall(".//{*}Obs"):
+        periodo = obs.attrib.get("TIME_PERIOD")
+        val = obs.attrib.get("OBS_VALUE")
+        try:
+            rates[periodo] = float(val)
+        except (TypeError, ValueError):
+            continue
+    return rates
