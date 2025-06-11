@@ -134,3 +134,50 @@ def test_find_latest_period_for_all_entities(monkeypatch):
     assert periodo == "2021-05"
     assert entities == ["X", "Y"]
     assert data == [{"entidad": "X"}, {"entidad": "Y"}]
+
+# Tests for XML-based rate series parsing
+SAMPLE_XML = '''<StructureSpecificData>
+  <DataSet>
+    <Series INDICATOR="FITD_PA">
+      <Obs TIME_PERIOD="2020-01" OBS_VALUE="3.5"/>
+      <Obs TIME_PERIOD="2020-02" OBS_VALUE="3.7"/>
+    </Series>
+    <Series INDICATOR="OTHER">
+      <Obs TIME_PERIOD="2020-01" OBS_VALUE="1.2"/>
+    </Series>
+  </DataSet>
+</StructureSpecificData>'''
+
+def test_get_rate_series_xml_success(monkeypatch):
+    class DummyResp:
+        def __init__(self, content):
+            self.status_code = 200
+            self.content = content.encode()
+    monkeypatch.setattr(fetch_module.requests, "get", lambda url: DummyResp(SAMPLE_XML))
+    rates = fetch_module.get_rate_series_xml("FITD_PA")
+    assert rates == {"2020-01": 3.5, "2020-02": 3.7}
+
+def test_get_rate_series_xml_missing_indicator(monkeypatch):
+    class DummyResp:
+        def __init__(self, content):
+            self.status_code = 200
+            self.content = content.encode()
+    monkeypatch.setattr(fetch_module.requests, "get", lambda url: DummyResp(SAMPLE_XML))
+    with pytest.raises(fetch_module.SBAPIError):
+        fetch_module.get_rate_series_xml("NON_EXISTENT")
+
+def test_get_rate_series_xml_http_error(monkeypatch):
+    class DummyResp:
+        status_code = 404
+        content = b""
+    monkeypatch.setattr(fetch_module.requests, "get", lambda url: DummyResp())
+    with pytest.raises(fetch_module.SBAPIError):
+        fetch_module.get_rate_series_xml("FITD_PA")
+
+def test_get_rate_series_xml_parse_error(monkeypatch):
+    class DummyResp:
+        status_code = 200
+        content = b"<bad></xml>"
+    monkeypatch.setattr(fetch_module.requests, "get", lambda url: DummyResp())
+    with pytest.raises(fetch_module.SBAPIError):
+        fetch_module.get_rate_series_xml("FITD_PA")

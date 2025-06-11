@@ -11,3 +11,8 @@ __pycache__/
 .pytest_cache/
 # Generated asset charts
 assets_*.png
+# Generated cash-equivalents charts
+# Generated cash-equivalents charts
+cash_equivalents_*.png
+# Generated concentration & rates charts
+concentration_rates_*.png
