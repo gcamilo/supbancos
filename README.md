@@ -77,3 +77,20 @@ Run the test suite:
 ```bash
 pytest -q
 ```
+
+## Regression analysis of interest rates on concentration and cash
+
+Run OLS regressions of the FITD_PA (short-term deposit) and FII_PA (interbank) rates
+on the concentration metrics (HHI, CR3, Gini) and the aggregate amount of cash systemwide
+over a rolling window.
+
+```bash
+python -m supbancos.regression
+```
+
+By default, this will:
+- look back 120 months (10 years; configurable via the script's `months_back` parameter)
+- fetch cash-equivalents data and compute concentration metrics & total cash each period
+- fetch FITD_PA and FII_PA rates from the Central Bank XML feed
+- build a pandas DataFrame and run two OLS regressions
+- print the model summaries to stdout
