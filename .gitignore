@@ -16,3 +16,5 @@ assets_*.png
 cash_equivalents_*.png
 # Generated concentration & rates charts
 concentration_rates_*.png
+# Local cache of raw API responses and rate XML
+cache/

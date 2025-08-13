@@ -16,6 +16,11 @@ class DummyResponse:
 
 
 @pytest.fixture(autouse=True)
+def clear_cache(tmp_path, monkeypatch):
+    cache_dir = tmp_path / "cache"
+    monkeypatch.setenv("SB_CACHE_DIR", str(cache_dir))
+
+@pytest.fixture(autouse=True)
 def env_api_key(monkeypatch):
     # Ensure API key is set, and clear any entity/type filters from environment for test isolation
     monkeypatch.setenv("SB_API_KEY", "dummy_key")

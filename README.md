@@ -28,6 +28,13 @@ Utilities to fetch financial statistics from the Dominican Republic Superintende
    pip install -r requirements.txt
    ```
 
+## Local caching
+
+To avoid re-downloading raw API responses and rate XML on every run, a local cache directory `cache/`
+(gitignored) is used under the project root.  Raw JSON for each EIF period and the Central Bank XML
+are stored here.  Subsequent script runs will reuse cached files if present.  To refresh data, remove
+the relevant files under `cache/`.
+
 ## Usage
 
 Generate and save the latest "Activos" bar chart (for the most recent period with data):
@@ -58,11 +65,11 @@ The script will:
 Generate and save concentration metrics (HHI, CR3, Gini) for "Efectivo y equivalentes de efectivo" over a rolling window alongside the short-term deposit rate (FITD_PA):
 
 ```bash
-python -m supbancos.concentration_chart
+python -m supbancos.concentration_chart --months-back <N>
 ```
 
 By default, this will:
-- look back the last 120 months (10 years; configurable via the script's `months_back` parameter)
+- look back the last 120 months (10 years; configurable via the `--months-back` option)
 - fetch cash-equivalents data for each period
 - compute HHI, CR3, and Gini coefficients on the distribution of cash-equivalents across institutions
 - fetch the FITD_PA (short-term deposit) and FII_PA (interbank) series from the Central Bank's XML feed and align them with the concentration metrics
@@ -85,11 +92,11 @@ on the concentration metrics (HHI, CR3, Gini) and the aggregate amount of cash s
 over a rolling window.
 
 ```bash
-python -m supbancos.regression
+python -m supbancos.regression --months-back <N>
 ```
 
 By default, this will:
-- look back 120 months (10 years; configurable via the script's `months_back` parameter)
+- look back 120 months (10 years; configurable via the `--months-back` option)
 - fetch cash-equivalents data and compute concentration metrics & total cash each period
 - fetch FITD_PA and FII_PA rates from the Central Bank XML feed
 - build a pandas DataFrame and run two OLS regressions
